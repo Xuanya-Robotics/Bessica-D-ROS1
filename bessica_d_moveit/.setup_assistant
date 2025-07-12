@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: bessica_d_description
+    relative_path: urdf/bessica_D_v2_1.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/bessica_d_v2_1.srdf
+  CONFIG:
+    author_name: xuanyaRobotics
+    author_email: xuanyaRobotics@163.com
+    generated_timestamp: 1752307809
