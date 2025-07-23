@@ -1,5 +1,6 @@
 <mujoco model="bessica_D_v2_1">
   <compiler angle="radian" meshdir="../meshes/"/>
+  <statistic center="-0.012496 0.000424702 0.622672" extent="1.93611" meansize="0.179951" />
   <default>
       <joint armature="0.001" damping="0.01" frictionloss="0.001" limited="true" margin="0.001" type="hinge"/>
       <geom material="black"/>
