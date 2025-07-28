@@ -19,8 +19,7 @@ constexpr size_t SINGLE_ARM_CMD_PAYLOAD_SIZE = 1 + SERVOS_PER_ARM * 2;
 constexpr size_t SINGLE_ARM_FRAME_SIZE = 5 + SINGLE_ARM_CMD_PAYLOAD_SIZE; // 26 bytes
 constexpr size_t GRIPPER_CMD_PAYLOAD_SIZE = 1 + 2;
 constexpr size_t GRIPPER_FRAME_SIZE = 5 + GRIPPER_CMD_PAYLOAD_SIZE; // 8 bytes
-// These are defined in serial_communicator.hpp, but we reference them here
-// If they aren't, you should define them.
+
 
 BessicaDDriverNode::BessicaDDriverNode() : pnh_("~"), last_process_time_(0.0)
 {
@@ -141,7 +140,6 @@ void BessicaDDriverNode::joint_command_callback(const sensor_msgs::JointState::C
 
         communicator_->write_raw_frame(frame);
         // wait for 2 ms to ensure the frame is sent completely
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     // Check for left gripper
     if (received_joints.count(left_gripper_name_)) {
@@ -158,9 +156,6 @@ void BessicaDDriverNode::joint_command_callback(const sensor_msgs::JointState::C
         frame[GRIPPER_FRAME_SIZE - 2] = calculate_checksum(frame);
         frame[GRIPPER_FRAME_SIZE - 1] = FRAME_END_BYTE;
         communicator_->write_raw_frame(frame);
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        // wait for 2 ms to ensure the frame is sent completely
-        // std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 
     // --- RIGHT ARM ---
@@ -190,10 +185,7 @@ void BessicaDDriverNode::joint_command_callback(const sensor_msgs::JointState::C
 
         frame[SINGLE_ARM_FRAME_SIZE - 2] = calculate_checksum(frame);
         frame[SINGLE_ARM_FRAME_SIZE - 1] = FRAME_END_BYTE;
-
         communicator_->write_raw_frame(frame);
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        // std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
     if (received_joints.count(right_gripper_name_)) {
         std::vector<uint8_t> frame(GRIPPER_FRAME_SIZE);
@@ -208,8 +200,9 @@ void BessicaDDriverNode::joint_command_callback(const sensor_msgs::JointState::C
 
         frame[GRIPPER_FRAME_SIZE - 2] = calculate_checksum(frame);
         frame[GRIPPER_FRAME_SIZE - 1] = FRAME_END_BYTE;
+        // communicator_->print_hex_frame("right Gripper Frame: ", frame);
+
         communicator_->write_raw_frame(frame);
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     }
 }
@@ -325,8 +318,6 @@ void BessicaDDriverNode::parse_dual_arm_states_frame(const std::vector<uint8_t>&
 
 void BessicaDDriverNode::parse_error_frame(const std::vector<uint8_t>& payload)
 {
-    // Based on Python: error_type at index 3 -> 1 of command payload
-    // error_param at index 4 -> 2 of command payload
     if (payload.size() < 2) {
         ROS_WARN("Error frame payload too short. Expected at least 2 bytes, got %zu.", payload.size());
         return;
@@ -390,14 +381,12 @@ uint16_t BessicaDDriverNode::rad_to_hardware_value_grip(double angle_rad)
 {
     double angle_deg = angle_rad * 180.0 / M_PI;
     angle_deg = std::max(0.0, std::min(100.0, angle_deg)); // Clamp to expected [0, 100] deg range
-    // Linear map [0, 100] deg to [2048, 2900]
     int hardware_value = static_cast<int>(angle_deg * 8.52 + 2048.0);
-    return std::max(2048, std::min(2900, hardware_value));
+    return std::max(2048, std::min(3590, hardware_value));
 }
 
 double BessicaDDriverNode::hardware_value_to_rad_grip(uint16_t hw_value) {
-    hw_value = std::max(2048, std::min(2900, (int)hw_value));
-    // Linear map [2048, 2900] back to [0, 100] deg
+    hw_value = std::max(2048, std::min(3590, (int)hw_value));
     double angle_deg = (static_cast<double>(hw_value) - 2048.0) / 8.52;
     return angle_deg * M_PI / 180.0;
 }

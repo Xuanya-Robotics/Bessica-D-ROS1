@@ -23,7 +23,6 @@ bool BessicaDHardwareInterface::init()
     joint_positions_.resize(num_joints_, 0.0);
     joint_position_commands_.resize(num_joints_, 0.0);
     
-    // --- NEW --- Resize the new raw data vector as well
     raw_joint_positions_.resize(num_joints_, 0.0);
 
     // Create a map for efficient name-to-index lookup
@@ -66,7 +65,6 @@ void BessicaDHardwareInterface::jointStateCallback(const sensor_msgs::JointState
         if (it != joint_name_to_index_map_.end())
         {
             size_t index = it->second;
-            // --- MODIFIED --- Write to the raw data vector, not the main one
             raw_joint_positions_[index] = msg->position[i];
         }
     }
@@ -74,25 +72,19 @@ void BessicaDHardwareInterface::jointStateCallback(const sensor_msgs::JointState
 
 void BessicaDHardwareInterface::read(const ros::Time& time, const ros::Duration& period)
 {
-    // --- MODIFIED --- This function is now responsible for synchronizing the data
     std::lock_guard<std::mutex> lock(command_mutex_);
-    // Copy the latest data from the raw vector to the one used by ros_control
     joint_positions_ = raw_joint_positions_;
-    // Note: We are not updating velocities or efforts, so they will remain zero.
-    // This is acceptable if you are only using position control.
 }
 
 void BessicaDHardwareInterface::write(const ros::Time& time, const ros::Duration& period)
 {
     sensor_msgs::JointState command_msg;
     command_msg.header.stamp = ros::Time::now();
-
-    // No lock needed here if we assume joint_position_commands_ is only written
-    // to by the controller manager in this thread context.
     command_msg.name = joint_names_;
     command_msg.position = joint_position_commands_;
 
     joint_command_pub_.publish(command_msg);
 }
+
 
 } // namespace bessica_d_driver

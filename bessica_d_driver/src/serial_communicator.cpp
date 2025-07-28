@@ -222,9 +222,9 @@ uint8_t SerialCommunicator::calculate_checksum(const std::vector<uint8_t>& frame
 
 void SerialCommunicator::print_hex_frame(const std::string& prefix, const std::vector<uint8_t>& data) const
 {
-    if (!debug_mode_) {
-        return;
-    }
+    // if (!debug_mode_) {
+    //     return;
+    // }
     std::stringstream ss;
     ss << prefix << "[" << data.size() << " bytes]: ";
     ss << std::hex << std::uppercase << std::setfill('0');
