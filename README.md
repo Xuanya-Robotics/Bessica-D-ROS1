@@ -1,6 +1,6 @@
 # Bessica-D-ROS1
 
-[中文说明](README_CH.md)
+[中文](README_CH.md)
 
 ## Prerequisites
 
