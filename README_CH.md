@@ -1,5 +1,30 @@
 # Bessica-D-ROS1
+
 [English](README.md)
+
+## 前置条件
+
+检查机器人串口连接：
+```bash
+ls /dev/ttyUSB*
+# 或
+ls /dev/ttyCH*
+```
+
+### 串口权限设置
+
+**临时方法：**
+```bash
+sudo chmod 666 /dev/ttyUSB*
+```
+
+**推荐（持久）方法：**  
+将当前用户加入 `dialout` 组，然后重新登录：
+```bash
+sudo usermod -a -G dialout $USER
+```
+重新登录后生效。
+
 ## 安装
 
 ```bash
