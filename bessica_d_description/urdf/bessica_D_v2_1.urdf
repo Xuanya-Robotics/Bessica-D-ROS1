@@ -162,7 +162,7 @@
         <origin xyz="0.0639500000000051 -0.000100000000002043 -5.00000000017345E-05" rpy="1.5707963267949 0 -1.5707963267949" />
         <parent link="left_arm_link2" />
         <child link="left_arm_link3" />
-        <axis xyz="0 0 -1" />
+        <axis xyz="0 0 1" />
         <limit lower="-2.14" upper="2.14" effort="12" velocity="5" />
     </joint>
     <link name="left_arm_link4">
@@ -220,7 +220,7 @@
         <origin xyz="0 0.0639500000000003 -0.000249999999995355" rpy="1.57079632679489 0 0" />
         <parent link="left_arm_link4" />
         <child link="left_arm_link5" />
-        <axis xyz="0 0 -1" />
+        <axis xyz="0 0 1" />
         <limit lower="-2.14" upper="2.14" effort="12" velocity="5" />
     </joint>
     <link name="left_arm_link6">
@@ -366,6 +366,7 @@
         <child link="left_arm_gripper_right_finger" />
         <axis xyz="0 -1 0" />
         <limit lower="-0.05" upper="0" effort="12" velocity="5" />
+        <mimic joint="left_arm_gripper_joint1" multiplier="-1" offset="0"/>
     </joint>
     <link name="right_arm_base_link">
         <visual>
@@ -421,7 +422,7 @@
         <origin xyz="0 0 0.1145" rpy="0 0 0" />
         <parent link="right_arm_base_link" />
         <child link="right_arm_link1" />
-        <axis xyz="0 0 -1" />
+        <axis xyz="0 0 1" />
         <limit lower="-2.14" upper="2.14" effort="12" velocity="5" />
     </joint>
     <link name="right_arm_link2">
@@ -508,7 +509,7 @@
         <origin xyz="0.00383999999999868 -5.00000000043614E-05 0.202609999999996" rpy="1.5707963267949 0 0" />
         <parent link="right_arm_link3" />
         <child link="right_arm_link4" />
-        <axis xyz="0 0 -1" />
+        <axis xyz="0 0 1" />
         <limit lower="-1.57" upper="1.57" effort="12" velocity="5" />
     </joint>
     <link name="right_arm_link5">
@@ -566,7 +567,7 @@
         <origin xyz="0.00384000000000215 0 0.210600000000004" rpy="1.5707963267949 0 0" />
         <parent link="right_arm_link5" />
         <child link="right_arm_link6" />
-        <axis xyz="0 0 -1" />
+        <axis xyz="0 0 1" />
         <limit lower="-1.57" upper="1.57" effort="12" velocity="5" />
     </joint>
     <link name="right_arm_link7">
@@ -595,7 +596,7 @@
         <origin xyz="0.000899999999999929 0.0556000000000009 0" rpy="-1.5707963267949 0 1.5707963267949" />
         <parent link="right_arm_link6" />
         <child link="right_arm_link7" />
-        <axis xyz="0 0 -1" />
+        <axis xyz="0 0 1" />
         <limit lower="-1.57" upper="1.57" effort="12" velocity="5" />
     </joint>
     <link name="right_arm_gripper_base">
@@ -683,6 +684,8 @@
         <child link="right_arm_gripper_right_finger" />
         <axis xyz="0 0 -1" />
         <limit lower="-0.05" upper="0" effort="12" velocity="5" />
+        <mimic joint="right_arm_gripper_joint1" multiplier="-1" offset="0"/>
+
     </joint>
     <transmission name="trans_left_arm_joint1">
         <type>transmission_interface/SimpleTransmission</type>
